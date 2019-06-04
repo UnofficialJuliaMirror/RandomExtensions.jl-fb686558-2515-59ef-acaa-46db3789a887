@@ -545,3 +545,12 @@ end
     @test rand(make(1:3)) ∈ 1:3
     @test rand(make(Float64)) isa Float64
 end
+
+@testset "rand(T => x) & rand(T => (x, y, ...))" begin
+    @test rand(Complex => Int) isa Complex{Int}
+    @test rand(Pair => (String, Int8)) isa Pair{String,Int8}
+    @test_throws ArgumentError rand(1=>2) # should not call rand(make(1, 2))
+
+    @test rand(Complex => Int, 3) isa Vector{Complex{Int}}
+    @test rand(Pair => (String, Int8), Set, 3) isa Set{Pair{String,Int8}}
+end
